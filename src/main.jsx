@@ -11,7 +11,7 @@ import {
   Sun,
   X,
 } from "lucide-react";
-import { sampleMaps } from "./data/sampleMaps";
+import { sampleMaps } from "./data/sampleMaps.js";
 import "./styles.css";
 
 const PADLET_URL = "https://padlet.com/bbssyy0329_1/padlet-n9zl71todza1xl7c";
