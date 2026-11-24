@@ -93,6 +93,14 @@ export const sampleMaps = [
     name: "",
     title: "점프맵 12",
     thumbnail: "/thumbnails/12.png",
+    url: "https://edu.delightex.com/TKB-HGT",
+  },
+  {
+    postId: "13",
+    studentId: "1307",
+    name: "유수린",
+    title: "점프맵 13",
+    thumbnail: "/thumbnails/13.png",
     url: "https://edu.delightex.com/RQV-BTM",
   },
 ];
