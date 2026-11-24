@@ -12,6 +12,10 @@ import {
   X,
 } from "lucide-react";
 import { sampleMaps } from "./data/sampleMaps.js";
+import gallerySpriteA from "./thumb1.js";
+import gallerySpriteB from "./thumb2.js";
+
+const embeddedGallerySprite = `data:image/webp;base64,${gallerySpriteA}${gallerySpriteB}`;
 import "./styles.css";
 
 const PADLET_URL = "https://padlet.com/bbssyy0329_1/padlet-n9zl71todza1xl7c";
@@ -396,6 +400,29 @@ function JumpMapCard({ map, onPreview, onQr }) {
 
 function Thumbnail({ map }) {
   const [failed, setFailed] = useState(false);
+  const postId = Number(map.postId);
+  const hasEmbeddedThumbnail = Number.isInteger(postId) && postId >= 1 && postId <= 13;
+
+  if (hasEmbeddedThumbnail) {
+    const column = (postId - 1) % 4;
+    const row = Math.floor((postId - 1) / 4);
+    return (
+      <div className="thumbnail-wrap">
+        <div
+          role="img"
+          aria-label={`${map.title} 게임 화면 썸네일`}
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundImage: `url("${embeddedGallerySprite}")`,
+            backgroundSize: "400% 400%",
+            backgroundPosition: `${(column / 3) * 100}% ${(row / 3) * 100}%`,
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="thumbnail-wrap">
