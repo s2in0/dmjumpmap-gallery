@@ -12,10 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { sampleMaps } from "./data/sampleMaps.js";
-import gallerySpriteA from "./thumb1.js";
-import gallerySpriteB from "./thumb2.js";
-
-const embeddedGallerySprite = `data:image/webp;base64,${gallerySpriteA}${gallerySpriteB}`;
+const embeddedGallerySprite = "/gallery-hq.webp";
 import "./styles.css";
 
 const PADLET_URL = "https://padlet.com/bbssyy0329_1/padlet-n9zl71todza1xl7c";
