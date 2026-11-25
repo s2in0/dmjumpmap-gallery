@@ -15,7 +15,7 @@ import { sampleMaps } from "./data/sampleMaps.js";
 const embeddedGallerySprite = "/gallery-hq.webp";
 import "./styles.css";
 
-const PADLET_URL = "https://padlet.com/bbssyy0329_1/padlet-n9zl71todza1xl7c";
+
 
 function parseCsvLine(line) {
   const result = [];
@@ -188,8 +188,6 @@ function App() {
         if (!normalizedQuery) return true;
         const searchable = [
           map.postId,
-          map.studentId,
-          map.name,
           map.title,
           map.reactionSummary.map((item) => item.emoji).join(" "),
         ]
@@ -198,12 +196,6 @@ function App() {
         return searchable.includes(normalizedQuery);
       })
       .sort((a, b) => {
-        if (sortKey === "studentIdAsc") {
-          const aKey = a.studentId || a.postId;
-          const bKey = b.studentId || b.postId;
-          return String(aKey).localeCompare(String(bKey), "ko", { numeric: true });
-        }
-        if (sortKey === "nameAsc") return (a.name || "").localeCompare(b.name || "", "ko");
         if (sortKey === "reactionDesc") {
           const reactionDiff = Number(b.reactionTotal || 0) - Number(a.reactionTotal || 0);
           if (reactionDiff !== 0) return reactionDiff;
@@ -225,10 +217,7 @@ function App() {
             <span>동명 점프맵 월드</span>
           </a>
           <div className="top-actions">
-            <a className="ghost-button" href={PADLET_URL} target="_blank" rel="noreferrer">
-              Padlet 원본
-              <ArrowUpRight size={16} />
-            </a>
+            
             <button className="theme-button" onClick={() => setDarkMode((value) => !value)} type="button">
               {darkMode ? <Sun size={18} /> : <Moon size={18} />}
               {darkMode ? "라이트" : "다크"}
@@ -237,15 +226,15 @@ function App() {
         </nav>
 
         <section className="hero-content" id="top">
-          <div className="hero-badge"><Sparkles size={16} /> Delightex 동아리 작품 전시 공간</div>
+          <div className="hero-badge"><Sparkles size={16} /> 동아리 활동 결과 보고서용 익명 전시</div>
           <h1>동아리 친구들이 만든<br />점프맵을 체험해 보세요!</h1>
           <p>
             동명중학교 동아리 학생들이 Delightex로 만든 점프맵 작품을 한곳에 모았습니다.
-            Padlet에 남긴 이모티콘 반응도 작품 카드에서 함께 확인할 수 있습니다.
+            학생 이름과 학번을 공개하지 않고 작품과 이모티콘 반응 집계만 보여줍니다.
           </p>
           <div className="hero-stats" aria-label="작품 통계">
             <div><strong>{maps.length}</strong><span>등록 작품</span></div>
-            <div><strong>{new Set(maps.map((item) => item.studentId || item.postId)).size}</strong><span>작품 번호</span></div>
+            <div><strong>{maps.length}</strong><span>작품 번호</span></div>
             <div><strong>{totalReactions}</strong><span>이모티콘 반응</span></div>
           </div>
         </section>
@@ -267,7 +256,7 @@ function App() {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="작품 번호, 학번, 이름, 작품 제목으로 검색"
+              placeholder="작품 번호 또는 작품 제목으로 검색"
               aria-label="점프맵 검색"
             />
           </div>
@@ -278,8 +267,6 @@ function App() {
             aria-label="정렬 방식"
           >
             <option value="postIdAsc">작품 번호순</option>
-            <option value="studentIdAsc">학번순</option>
-            <option value="nameAsc">이름순</option>
             <option value="reactionDesc">이모티콘 반응 많은 순</option>
           </select>
         </section>
@@ -317,7 +304,7 @@ function App() {
             <div className="reviews-grid">
               {reviews.map((review) => (
                 <article className="review-card" key={review.id}>
-                  <strong>{review.name}</strong>
+                  <strong>{"활동 참여 학생"}</strong>
                   <p>{review.comment}</p>
                 </article>
               ))}
@@ -340,7 +327,7 @@ function App() {
 
 function JumpMapCard({ map, onPreview, onQr }) {
   const isPlaceholder = isPlaceholderUrl(map.url);
-  const label = map.studentId ? `학번 ${map.studentId}` : `작품 ${map.postId}번`;
+  const label = `작품 ${map.postId}번`;
 
   return (
     <article className="map-card">
@@ -353,7 +340,7 @@ function JumpMapCard({ map, onPreview, onQr }) {
 
       <h3>{map.title}</h3>
 
-      {map.name ? <div className="creator">제작: {map.name}</div> : null}
+
 
       <div className="emoji-reactions" aria-label="Padlet 이모티콘 반응">
         <div className="emoji-heading">Padlet 반응</div>
@@ -442,14 +429,14 @@ function Thumbnail({ map }) {
 
 
 function PreviewModal({ map, onClose }) {
-  const label = map.studentId ? `학번 ${map.studentId}` : `작품 ${map.postId}번`;
+  const label = `작품 ${map.postId}번`;
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={`${map.title} 점프맵 미리보기`}>
       <div className="preview-modal">
         <div className="modal-header">
           <div>
-            <span>{label}{map.name ? ` · ${map.name}` : ""}</span>
+            <span>{label}</span>
             <h2>{map.title}</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="닫기"><X size={22} /></button>
@@ -477,14 +464,14 @@ function PreviewModal({ map, onClose }) {
 
 function QrModal({ map, onClose }) {
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(map.url)}`;
-  const label = map.studentId ? `학번 ${map.studentId}` : `작품 ${map.postId}번`;
+  const label = `작품 ${map.postId}번`;
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={`${map.title} QR 코드`}>
       <div className="qr-modal">
         <div className="modal-header">
           <div>
-            <span>{label}{map.name ? ` · ${map.name}` : ""}</span>
+            <span>{label}</span>
             <h2>{map.title}</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="닫기"><X size={22} /></button>
